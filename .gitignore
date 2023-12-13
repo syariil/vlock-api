@@ -1,0 +1,4 @@
+/venv/
+/.env
+/model.h5
+/test
