@@ -12,6 +12,12 @@ from resources.predict import pre
 from flask_mysqldb import MySQL
 from flask_bcrypt import Bcrypt
 
+# import numpy as np
+# import keras
+# import tensorflow as tf
+# import io
+# from PIL import Image
+
 
 db = MySQL()
 bcript = Bcrypt()
@@ -35,7 +41,7 @@ app.register_blueprint(us)
 app.register_blueprint(pre)
 
 
-# model = keras.models.load_model("nn.h5")
+# model = keras.models.load_model("model.h5")
 
 
 # def transform_image(pillow_image):
@@ -43,7 +49,7 @@ app.register_blueprint(pre)
 #     data = data / 255.0
 #     data = data[np.newaxis, ..., np.newaxis]
 #     # --> [1, x, y, 1]
-#     data = tf.image.resize(data, [28, 28])
+#     data = tf.image.resize(data, [150, 150])
 #     return data
 
 
@@ -56,9 +62,9 @@ app.register_blueprint(pre)
 
 
 # @app.route("/prediction", methods=["GET", "POST"])
-# def index():
+# def prediction():
 #     if request.method == "POST":
-#         file = request.files.get('file')
+#         file = request.files['file']
 #         if file is None or file.filename == "":
 #             return jsonify({"error": "no file"})
 
@@ -68,8 +74,8 @@ app.register_blueprint(pre)
 #             tensor = transform_image(pillow_img)
 #             prediction = predict(tensor)
 #             data = {"prediction": int(prediction)}
-#             return jsonify(data)
-#         except Exception as e:
+#             return jsonify(file.filename)
+#         except KeyError as e:
 #             return jsonify({"error": str(e)})
 
 #     return "OK"
