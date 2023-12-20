@@ -102,7 +102,6 @@ class Favorite(MethodView):
     def post(self, user_id):
         try:
             location_id = request.form['location_id']
-            image = request.form['destination_img_url']
             # location_exist = location[location_id]
             location_exist = [
                 x for x in location.values() if x["id"] == location_id
@@ -113,7 +112,7 @@ class Favorite(MethodView):
                     "error": "Location does not exist."
                 }), 404
 
-            query = f"""INSERT INTO favorite(user_id, location_id, destination_img_url) VALUES({user_id}, '{location_id}', '{image}')"""
+            query = f"""INSERT INTO favorite(user_id, location_id, destination_img_url) VALUES({user_id}, '{location_id}', '{location_exist[0]["destination_img_url"]}')"""
             post = mysql.connection.cursor()
             post.execute(query)
             mysql.connection.commit()
