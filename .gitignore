@@ -1,4 +1,7 @@
 /venv/
 /.env
 /model.h5
-/test
+/.flaskenv
+/vloc-project.json
+/resources/__pycache__
+/__pycache__

@@ -1,22 +1,10 @@
-# import io
-# import tensorflow as tf
-# from tensorflow import keras
-# import numpy as np
-# from PIL.Image import Image
-
-from flask import Flask, request, jsonify, abort, render_template
-# from flask_smorest import Api
+from flask import Flask
 from resources.location import loc
 from resources.users import us
+from resources.favorite import fav
 from resources.predict import pre
 from flask_mysqldb import MySQL
 from flask_bcrypt import Bcrypt
-
-# import numpy as np
-# import keras
-# import tensorflow as tf
-# import io
-# from PIL import Image
 
 
 db = MySQL()
@@ -36,54 +24,12 @@ def create_app():
 
 app = create_app()
 
+
 app.register_blueprint(loc)
 app.register_blueprint(us)
+app.register_blueprint(fav)
 app.register_blueprint(pre)
-
-
-# model = keras.models.load_model("model.h5")
-
-
-# def transform_image(pillow_image):
-#     data = np.asarray(pillow_image)
-#     data = data / 255.0
-#     data = data[np.newaxis, ..., np.newaxis]
-#     # --> [1, x, y, 1]
-#     data = tf.image.resize(data, [150, 150])
-#     return data
-
-
-# def predict(x):
-#     predictions = model(x)
-#     predictions = tf.nn.softmax(predictions)
-#     pred0 = predictions[0]
-#     label0 = np.argmax(pred0)
-#     return label0
-
-
-# @app.route("/prediction", methods=["GET", "POST"])
-# def prediction():
-#     if request.method == "POST":
-#         file = request.files['file']
-#         if file is None or file.filename == "":
-#             return jsonify({"error": "no file"})
-
-#         try:
-#             image_bytes = file.read()
-#             pillow_img = Image.open(io.BytesIO(image_bytes)).convert('L')
-#             tensor = transform_image(pillow_img)
-#             prediction = predict(tensor)
-#             data = {"prediction": int(prediction)}
-#             return jsonify(file.filename)
-#         except KeyError as e:
-#             return jsonify({"error": str(e)})
-
-#     return "OK"
 
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=3000, debug=True)
-    # app.run(host="0.0.0.0", port=3000, debug=True)
-
-
-# api = Api(app)
