@@ -1,0 +1,12 @@
+Flask
+flask-smorest
+Flask-MySQLdb
+uuid
+marshmallow
+tensorflow
+numpy
+pyjwt
+google-cloud-storage
+gunicorn
+flask-bcrypt
+dotenv
