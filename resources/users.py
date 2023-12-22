@@ -148,7 +148,7 @@ class UserList(MethodView):
         """Get all users"""
         cursor = mysql.cursor()
         try:
-            cursor.execute("SELECT * FROM User")
+            cursor.execute("SELECT * FROM user")
             # this will extract row headers
             rv = cursor.fetchall()
 

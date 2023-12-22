@@ -6,7 +6,7 @@ Werkzeug
 marshmallow
 numpy
 pyjwt
-tensorflow
+tensorflow==2.6.2
 google-cloud-storage
 gunicorn
 uwsgi
