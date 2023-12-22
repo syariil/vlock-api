@@ -35,12 +35,8 @@ class Users(MethodView):
                     "status": "fail",
                     "message": "user not found"
                 }), 404
-
-            row_headers = [x[0] for x in cursor.description]
-            json_data = []
-            json_data.append(dict(zip(row_headers, data)))
             cursor.close()
-            return jsonify(json_data), 200
+            return jsonify(data), 200
         except KeyError:
             abort(404)
 
@@ -154,13 +150,9 @@ class UserList(MethodView):
         try:
             cursor.execute("SELECT * FROM User")
             # this will extract row headers
-            row_headers = [x[0] for x in cursor.description]
             rv = cursor.fetchall()
-            json_data = []
-            for result in rv:
-                json_data.append(dict(zip(row_headers, result)))
-            cursor.close()
-            return jsonify(json_data), 200
+
+            return jsonify(rv), 200
         except KeyError:
             abort(404)
 
@@ -233,11 +225,8 @@ class Login(MethodView):
                 }), 404
 
             # Checking if the password is correct using bcrypt compare method
-            row_headers = [x[0] for x in db.description]
-            json_data = []
-            json_data.append(dict(zip(row_headers, result)))
 
-            pass_user = json_data[0]['password']
+            pass_user = result['password']
             generatePass = bcrypt.check_password_hash(pass_user, password_req)
 
             if not generatePass:
@@ -249,14 +238,14 @@ class Login(MethodView):
             token = jwt.encode({
                 'iat': datetime.datetime.utcnow(),                          # Current time
                 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=3),
-                'id': json_data[0]["id"]
+                'id': result["id"]
             },
                 settings.SECRET_KEY, algorithm="HS256")
             db.close()
 
             return jsonify({
                 "status": "success",
-                "username": json_data[0]["username"],
+                "username": result["username"],
                 "token": token
             })
 

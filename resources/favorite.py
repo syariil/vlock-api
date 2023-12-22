@@ -26,12 +26,10 @@ class FavoriteDetail(MethodView):
                     "error": "favorite no found"
                 }), 404
 
-            row_headers = [x[0] for x in cursor.description]
-            json_data = []
-            json_data.append(dict(zip(row_headers, data)))
+            # json_data = jsonify(data)
             cursor.close()
 
-            location_result = location[json_data[0]['location_id']]
+            location_result = location[data['location_id']]
             return jsonify({
                 "status": "success",
                 "message": "succes get favorite",
@@ -83,16 +81,12 @@ class Favorite(MethodView):
                     "status": "fail",
                     "message": "No favorites found"
                 }), 404
-            row_headeres = [x[0] for x in favorite.description]
-            json_data = []
-            for result in data:
-                json_data.append(dict(zip(row_headeres, result)))
             # json_data.append
             favorite.close()
             return jsonify({
                 "status": "success",
                 "message": "get favorite from users",
-                "favorite": json_data
+                "favorite": data
             }), 201
         except TabError:
             abort(404)

@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-import mysql.connector
+import pymysql.cursors
 
 load_dotenv()
 
@@ -11,9 +11,10 @@ MYSQL_DB = os.getenv('MYSQL_DB')
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 
-mydb = mysql.connector.connect(
-  host=MYSQL_HOST,
-  user=MYSQL_USER,
-  password=MYSQL_PASSWORD,
-  database=MYSQL_DB
+mydb = pymysql.connect(
+    host=MYSQL_HOST,
+    user=MYSQL_USER,
+    password=MYSQL_PASSWORD,
+    database=MYSQL_DB,
+    cursorclass=pymysql.cursors.DictCursor
 )
