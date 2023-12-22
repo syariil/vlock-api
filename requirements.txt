@@ -1,6 +1,5 @@
 Flask
 flask-smorest
-Flask-MySQLdb
 uuid
 marshmallow
 tensorflow
@@ -9,4 +8,5 @@ pyjwt
 google-cloud-storage
 gunicorn
 flask-bcrypt
-dotenv
+python-dotenv
+mysql-connector-python

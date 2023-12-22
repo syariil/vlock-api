@@ -3,11 +3,8 @@ from resources.location import loc
 from resources.users import us
 from resources.favorite import fav
 from resources.predict import pre
-from flask_mysqldb import MySQL
 from flask_bcrypt import Bcrypt
 
-
-db = MySQL()
 bcript = Bcrypt()
 
 
@@ -15,9 +12,6 @@ def create_app():
     app = Flask(__name__)
     app.config["API_TITLE"] = "VLOC REST API"
     app.config["API_VERSION"] = "v1.0.0"
-    app.config.from_pyfile('settings.py')
-
-    db.init_app(app)
     bcript.init_app(app)
     return app
 

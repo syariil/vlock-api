@@ -1,13 +1,13 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint
 from flask import abort, request, jsonify
-from flask_mysqldb import MySQL
+
 from db import location
 from auth import token_required
-
+from settings import mydb
 fav = Blueprint("Favorites", __name__)
 
-mysql = MySQL()
+mysql = mydb
 
 
 @fav.route("/favorite/<int:user_id>/<int:id>")
@@ -16,7 +16,7 @@ class FavoriteDetail(MethodView):
     @fav.response(200)
     def get(self, user_id, id):
         try:
-            cursor = mysql.connection.cursor()
+            cursor = mysql.cursor()
             cursor.execute(
                 f"""SELECT * from favorite where user_id={user_id} AND id={id}""")
             data = cursor.fetchone()
@@ -44,7 +44,7 @@ class FavoriteDetail(MethodView):
     @token_required
     def delete(self, user_id, id):
         try:
-            cursor = mysql.connection.cursor()
+            cursor = mysql.cursor()
             cursor.execute(
                 f"""SELECT * from favorite where user_id={user_id} AND id={id}""")
             data = cursor.fetchone()
@@ -54,10 +54,10 @@ class FavoriteDetail(MethodView):
                     "error": "favorite no found"
                 }), 404
             # cursor.execute("select * from ")
-            db = mysql.connection.cursor()
+            db = mysql.cursor()
             query = f"""DELETE FROM favorite WHERE id={id}"""
             db.execute(query)
-            mysql.connection.commit()
+            mysql.commit()
             db.close()
             return jsonify({
                 'status': 'success',
@@ -74,7 +74,7 @@ class Favorite(MethodView):
     @token_required
     def get(self, user_id):
         try:
-            favorite = mysql.connection.cursor()
+            favorite = mysql.cursor()
             favorite.execute(
                 f"""SELECT * FROM favorite where user_id={user_id}""")
             data = favorite.fetchall()
@@ -113,9 +113,9 @@ class Favorite(MethodView):
                 }), 404
 
             query = f"""INSERT INTO favorite(user_id, location_id, destination_img_url) VALUES({user_id}, '{location_id}', '{location_exist[0]["destination_img_url"]}')"""
-            post = mysql.connection.cursor()
+            post = mysql.cursor()
             post.execute(query)
-            mysql.connection.commit()
+            mysql.commit()
             post.close()
             return jsonify({
                 "status": "success",

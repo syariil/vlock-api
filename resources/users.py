@@ -1,7 +1,6 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint
 from flask import abort, request, jsonify
-from flask_mysqldb import MySQL
 import datetime
 import os
 from google.cloud import storage
@@ -18,7 +17,7 @@ storage_name = storage_client.bucket('vloc-project')
 
 us = Blueprint('Users', __name__)
 
-mysql = MySQL()
+mysql = settings.mydb
 bcrypt = Bcrypt()
 
 
@@ -28,7 +27,7 @@ class Users(MethodView):
     @token_required
     def get(self, id):
         try:
-            cursor = mysql.connection.cursor()
+            cursor = mysql.cursor()
             cursor.execute(f"""SELECT * FROM user where id={id}""")
             data = cursor.fetchone()
             if data is None:
@@ -49,7 +48,7 @@ class Users(MethodView):
     @token_required
     def delete(self, id):
         try:
-            check = mysql.connection.cursor()
+            check = mysql.cursor()
             query = f'''SELECT username FROM user WHERE id={id} '''
             check.execute(query)
             data = check.fetchone()
@@ -65,13 +64,13 @@ class Users(MethodView):
                 # remove the record of this user's favorite from favorite table
                 sql_command = f'''DELETE FROM favorite WHERE user_id="{id}"'''
                 check.execute(sql_command)
-                mysql.connection.commit()
+                mysql.commit()
 
             check.close()
-            db = mysql.connection.cursor()
+            db = mysql.cursor()
             query = f"""DELETE FROM user WHERE id={id}"""
             db.execute(query)
-            mysql.connection.commit()
+            mysql.commit()
             db.close()
             return jsonify({
                 'status': 'success',
@@ -106,7 +105,7 @@ class UserUpdateProfile(MethodView):
             image_ext = os.path.splitext(image.filename[::1])
 
             # get username
-            cursor = mysql.connection.cursor()
+            cursor = mysql.cursor()
             cursor.execute(f"""SELECT username FROM user where id={id}""")
             username = cursor.fetchone()
             if username is None:
@@ -125,11 +124,11 @@ class UserUpdateProfile(MethodView):
             blob = storage_name.blob("profile/" + image.filename)
             blob.upload_from_filename("static/images/" + image.filename)
             # update data in database
-            db = mysql.connection.cursor()
+            db = mysql.cursor()
             image_url = f"https://storage.cloud.google.com/vloc-project/profile/{filename}"
             db.execute(
                 f"""UPDATE user SET image="{image_url}" where id={id}""")
-            mysql.connection.commit()
+            mysql.commit()
             db.close()
             # remove file from local directory
             os.remove("static/images/" + image.filename)
@@ -151,7 +150,7 @@ class UserList(MethodView):
     @token_required
     def get(self):
         """Get all users"""
-        cursor = mysql.connection.cursor()
+        cursor = mysql.cursor()
         try:
             cursor.execute("SELECT * FROM User")
             # this will extract row headers
@@ -182,7 +181,7 @@ class Register(MethodView):
             createdAt = datetime.datetime.now()
             updateAt = datetime.datetime.now()
 
-            db = mysql.connection.cursor()
+            db = mysql.cursor()
             db.execute(
                 f"""SELECT username, email from `user` WHERE username='{username}' OR email='{email}'""")
             check = db.fetchall()
@@ -193,9 +192,9 @@ class Register(MethodView):
                     password, 8).decode("utf-8")
 
                 query = f"""INSERT INTO user(username, email, password, image, createdAt, updateAt) VALUES('{username}', '{email}', "{hashPass}",'{image}','{createdAt}','{updateAt}')"""
-                update = mysql.connection.cursor()
+                update = mysql.cursor()
                 update.execute(query)
-                mysql.connection.commit()
+                mysql.commit()
                 update.close()
                 return jsonify({
                     'status': 'success',
@@ -222,7 +221,7 @@ class Login(MethodView):
 
         try:
 
-            db = mysql.connection.cursor()
+            db = mysql.cursor()
             query = f"""SELECT * FROM `user` WHERE email="{email}" """
             db.execute(query)
             result = db.fetchone()
