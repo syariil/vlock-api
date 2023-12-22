@@ -1,12 +1,15 @@
 Flask
 flask-smorest
+cPython
 uuid
+Werkzeug
 marshmallow
-tensorflow
 numpy
 pyjwt
+tensorflow
 google-cloud-storage
 gunicorn
+uwsgi
 flask-bcrypt
 python-dotenv
-mysql-connector-python
+PyMySQL
