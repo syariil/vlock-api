@@ -1,5 +1,0 @@
-MYSQL_USER=user_database
-MYSQL_PASSWORD=databse_password
-MYSQL_DB=database_name
-MYSQL_HOST=database_host
-SECRET_KEY=dont_share_it

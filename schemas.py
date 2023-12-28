@@ -12,7 +12,8 @@ class LocationSchema(Schema):
     open_time = fields.Str(required=True)
     rating = fields.Float()
     predict_number = fields.Int()
-    link_to_gmaps = fields.Str(required=True)
+    latitude = fields.Float()
+    longitude = fields.Float()
     createdAt = fields.DateTime()
     updateAt = fields.DateTime()
 
@@ -27,4 +28,5 @@ class LocationUpdateSchema(Schema):
     open_time = fields.Str(required=True)
     rating = fields.Float()
     predict_number = fields.Int()
-    link_to_gmaps = fields.Str(required=True)
+    latitude = fields.Float()
+    longitude = fields.Float()

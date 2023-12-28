@@ -26,7 +26,6 @@ def json_abort(status_code, message):
 @loc.route("/location/<string:id>")
 class Location(MethodView):
     @loc.response(200, LocationSchema)
-    @token_required
     def get(self, id):
         """Get a single location by ID"""
         try:
@@ -78,17 +77,24 @@ class Location(MethodView):
 @loc.route("/location")
 class LocationList(MethodView):
     @loc.response(200, LocationSchema(many=True))
-    @token_required
     def get(self):
         try:
             category = request.args["category"]
             location_category = [
                 x for x in location.values() if x["category"] == category]
-            return jsonify(
-                location_category
-            )
+            return jsonify({
+                "status" : "success",
+                "message" : "success get location by category",
+                "locationList" : location_category
+            })
         except KeyError:
-            return location.values()
+            #location
+            return jsonify({
+                "status" : "success",
+                "message" : "success get location",
+                "locationList" : [x for x in location.values()]
+            })
+#location.values()
 
     @loc.arguments(LocationSchema)
     @loc.response(201, LocationSchema)
@@ -107,8 +113,7 @@ class LocationList(MethodView):
 
             return jsonify({
                 'status': 'success',
-                'code': 201,
-                'message': f'add new destination success',
+                'message': 'add new destination success',
                 'data': {
                     'destination_name': location[id]["destination_name"],
                     "id": location[id]["id"]

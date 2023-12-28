@@ -4,9 +4,10 @@ cPython
 uuid
 Werkzeug
 marshmallow
-numpy
+numpy==1.24.3
+pillow
 pyjwt
-tensorflow==2.6.2
+tensorflow
 google-cloud-storage
 gunicorn
 uwsgi

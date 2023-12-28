@@ -65,16 +65,18 @@ class Prediction(MethodView):
             prob = prediction[0][classes_x]
             prob = round(float(prob), 3) * 100
             place = [x for x in location.values() if x["predict_number"]
-                     == classes_x]
+                     == classes_x[0]]
 
             # remove file request in directory
             os.remove(file_path)
 
             result_json = {
                 "id": place[0]['id'],
+                "destination_name" : place[0]['destination_name'],
                 "address": place[0]['address'],
                 "destination_img_url": place[0]['destination_img_url']
             }
+#            return jsonify(str(classes_x)), 200
 
             return jsonify({
                 'status': 'success',
